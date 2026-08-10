@@ -1,7 +1,6 @@
 package employee_management_system.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.HashMap;
 
