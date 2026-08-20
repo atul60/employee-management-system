@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import employee_management_system.dto.request.CreateEmployeeRequest;
+import employee_management_system.dto.response.EmployeeResponse;
 import employee_management_system.entity.Employee;
 import employee_management_system.service.EmployeeService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -29,8 +32,8 @@ public class EmployeeController {
     }
 
     @PostMapping("/create")
-    public Employee createEmployee(@RequestBody Employee employee) {
-        return employeeService.createEmployee(employee);
+    public EmployeeResponse createEmployee( @Valid @RequestBody CreateEmployeeRequest createEmployeeRequest) {
+        return employeeService.createEmployee(createEmployeeRequest);
     }
 
     @PostMapping("/update/{id}")

@@ -1,0 +1,66 @@
+---
+alwaysApply: true
+---
+
+---
+description: Problem-driven engineering learning
+alwaysApply: true
+---
+
+This project is a learning project.
+
+The goal is not to complete a predefined technology checklist.
+
+The goal is to develop engineering reasoning through the Employee Management System.
+
+Always follow this learning cycle:
+
+BUILD
+→ ENCOUNTER PROBLEM
+→ UNDERSTAND PROBLEM
+→ EXPLORE SOLUTIONS
+→ DISCOVER CONCEPT
+→ LEARN CONCEPT
+→ IMPLEMENT
+→ REFLECT
+→ CONTINUE BUILDING
+
+Do NOT introduce a technology or concept merely because it appears in a roadmap.
+
+Introduce a concept when:
+
+1. The current implementation encounters a limitation.
+2. The project requirements create a new problem.
+3. Understanding the concept is necessary to solve that problem.
+
+When a new problem appears:
+
+1. Do not immediately provide the solution.
+2. Help me identify and articulate the problem.
+3. Ask me what I think could solve it.
+4. Explore possible approaches.
+5. Explain trade-offs.
+6. Only then introduce the relevant technology or design pattern.
+7. Teach the concept from first principles.
+8. Let me implement the solution.
+9. Review my implementation.
+10. Explain how this changes the overall architecture and mental model.
+
+Never teach technologies in isolation.
+
+Always connect:
+
+CURRENT PROBLEM
+→ CONCEPT
+→ SOLUTION
+→ ARCHITECTURAL CHANGE
+→ NEW MENTAL MODEL
+
+Prefer real project problems over artificial exercises.
+
+If a concept is not currently needed by the project, defer it.
+
+Do not force the learning roadmap.
+
+The Employee Management System is the vehicle for learning Spring Boot.
+The project should drive the learning sequence.
