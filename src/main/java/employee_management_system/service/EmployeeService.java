@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import employee_management_system.dto.request.CreateEmployeeRequest;
 import employee_management_system.dto.response.EmployeeResponse;
 import employee_management_system.entity.Employee;
+import employee_management_system.entity.enums.StatusCode;
 import employee_management_system.exception.DuplicateResourceException;
+import employee_management_system.exception.ResourceNotFoundException;
 import employee_management_system.repository.EmployeeRepository;
 
 @Service
@@ -25,10 +27,10 @@ public class EmployeeService {
 
     public EmployeeResponse createEmployee(CreateEmployeeRequest createEmployeeRequest) {
         if (employeeRepository.existsByEmail(createEmployeeRequest.getEmail())) {
-            throw new DuplicateResourceException("Employee with this email already exists");
+            throw new DuplicateResourceException(StatusCode.DUPLICATE_EMAIL);
         }
-        if(employeeRepository.existsByPhoneNumber(createEmployeeRequest.getPhoneNumber())) {
-            throw new RuntimeException("Employee with this phone number already exists");
+        if (employeeRepository.existsByPhoneNumber(createEmployeeRequest.getPhoneNumber())) {
+            throw new DuplicateResourceException(StatusCode.DUPLICATE_PHONE, StatusCode.DUPLICATE_PHONE.getDefaultMessage());
         }
         Employee employee = new Employee();
         employee.setFirstName(createEmployeeRequest.getFirstName());
@@ -56,14 +58,15 @@ public class EmployeeService {
     }
 
     public void deleteEmployeeById(Long id) {
-        if(!employeeRepository.existsById(id)) {
-            throw new RuntimeException("Employee not found");
+        if (!employeeRepository.existsById(id)) {
+            throw new ResourceNotFoundException(StatusCode.EMPLOYEE_NOT_FOUND);
         }
         employeeRepository.deleteById(id);
     }
 
     public Employee updateEmployeeById(Long id, Employee employee) {
-        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+        Employee existingEmployee = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(StatusCode.EMPLOYEE_NOT_FOUND));
         existingEmployee.setFirstName(employee.getFirstName());
         existingEmployee.setLastName(employee.getLastName());
         existingEmployee.setEmail(employee.getEmail());
