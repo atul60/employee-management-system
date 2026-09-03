@@ -10,6 +10,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -46,8 +48,12 @@ public class Employee {
     @Pattern(regexp = "^\\d{10}$")
     @NotBlank
     private String phoneNumber;
-    private String department;
-    private String designation;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+    @ManyToOne
+    @JoinColumn(name = "designation_id")
+    private Designation designation;
     @NotNull
     @Positive
     private BigDecimal salary;

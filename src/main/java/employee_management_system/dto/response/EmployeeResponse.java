@@ -16,8 +16,8 @@ public class EmployeeResponse {
     private String lastName;
     private String email;
     private String phoneNumber;
-    private String department;
-    private String designation;
+    private DepartmentResponse department;
+    private DesignationResponse designation;
     private BigDecimal salary;
     private LocalDate joiningDate;
     private EmployeeStatus status;

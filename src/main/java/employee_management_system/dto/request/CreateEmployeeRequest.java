@@ -16,18 +16,27 @@ import lombok.Setter;
 public class CreateEmployeeRequest {
     @NotBlank(message = "First name is required")
     private String firstName;
+
     @NotBlank(message = "Last name is required")
     private String lastName;
+
     @Email(message = "Invalid email address")
     @NotBlank(message = "Email is required")
     private String email;
+
     @Pattern(regexp = "^\\d{10}$", message = "Invalid phone number")
     @NotBlank(message = "Phone number is required")
     private String phoneNumber;
-    private String department;
-    private String designation;
+
+    @NotNull(message = "Department is required")
+    private Long department;
+
+    @NotNull(message = "Designation is required")
+    private Long designation;
+
     @NotNull(message = "Salary is required")
     @Positive(message = "Salary must be greater than 0")
     private BigDecimal salary;
+    
     private LocalDate joiningDate;
 }

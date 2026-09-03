@@ -1,28 +1,44 @@
 package employee_management_system.service;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import employee_management_system.dto.request.CreateEmployeeRequest;
+import employee_management_system.dto.response.DepartmentResponse;
+import employee_management_system.dto.response.DesignationResponse;
 import employee_management_system.dto.response.EmployeeResponse;
+import employee_management_system.entity.Department;
+import employee_management_system.entity.Designation;
 import employee_management_system.entity.Employee;
 import employee_management_system.entity.enums.StatusCode;
 import employee_management_system.exception.DuplicateResourceException;
 import employee_management_system.exception.ResourceNotFoundException;
+import employee_management_system.repository.DepartmentRepository;
+import employee_management_system.repository.DesignationRepository;
 import employee_management_system.repository.EmployeeRepository;
 
 @Service
 public class EmployeeService {
 
     private EmployeeRepository employeeRepository;
-
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    private DepartmentRepository departmentRepository;
+    private DesignationRepository designationRepository;
+    
+    public EmployeeService(
+            EmployeeRepository employeeRepository,
+            DepartmentRepository departmentRepository,
+            DesignationRepository designationRepository) {
         this.employeeRepository = employeeRepository;
+        this.departmentRepository = departmentRepository;
+        this.designationRepository = designationRepository;
     }
 
-    public List<Employee> getAllEmployees() {
-        List<Employee> employees = employeeRepository.findAll();
-        return employees;
+    public List<EmployeeResponse> getAllEmployees() {
+        return employeeRepository.findAll().stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
     public EmployeeResponse createEmployee(CreateEmployeeRequest createEmployeeRequest) {
@@ -37,24 +53,15 @@ public class EmployeeService {
         employee.setLastName(createEmployeeRequest.getLastName());
         employee.setEmail(createEmployeeRequest.getEmail());
         employee.setPhoneNumber(createEmployeeRequest.getPhoneNumber());
-        employee.setDepartment(createEmployeeRequest.getDepartment());
-        employee.setDesignation(createEmployeeRequest.getDesignation());
+        employee.setDepartment(departmentRepository.findById(createEmployeeRequest.getDepartment())
+                .orElseThrow(() -> new ResourceNotFoundException(StatusCode.EMPLOYEE_NOT_FOUND, "Department not found")));
+        employee.setDesignation(designationRepository.findById(createEmployeeRequest.getDesignation())
+                .orElseThrow(() -> new ResourceNotFoundException(StatusCode.EMPLOYEE_NOT_FOUND, "Designation not found")));
         employee.setSalary(createEmployeeRequest.getSalary());
         employee.setJoiningDate(createEmployeeRequest.getJoiningDate());
         
         Employee createdEmployee = employeeRepository.save(employee);
-        EmployeeResponse employeeResponse = new EmployeeResponse();
-        employeeResponse.setId(createdEmployee.getId());
-        employeeResponse.setFirstName(createdEmployee.getFirstName());
-        employeeResponse.setLastName(createdEmployee.getLastName());
-        employeeResponse.setEmail(createdEmployee.getEmail());
-        employeeResponse.setPhoneNumber(createdEmployee.getPhoneNumber());
-        employeeResponse.setDepartment(createdEmployee.getDepartment());
-        employeeResponse.setDesignation(createdEmployee.getDesignation());
-        employeeResponse.setSalary(createdEmployee.getSalary());
-        employeeResponse.setJoiningDate(createdEmployee.getJoiningDate());
-        employeeResponse.setStatus(createdEmployee.getStatus());
-        return employeeResponse;
+        return toResponse(createdEmployee);
     }
 
     public void deleteEmployeeById(Long id) {
@@ -78,5 +85,40 @@ public class EmployeeService {
         existingEmployee.setStatus(employee.getStatus());
         return employeeRepository.save(existingEmployee);
     }
-    
+
+    private EmployeeResponse toResponse(Employee employee) {
+        EmployeeResponse employeeResponse = new EmployeeResponse();
+        employeeResponse.setId(employee.getId());
+        employeeResponse.setFirstName(employee.getFirstName());
+        employeeResponse.setLastName(employee.getLastName());
+        employeeResponse.setEmail(employee.getEmail());
+        employeeResponse.setPhoneNumber(employee.getPhoneNumber());
+        employeeResponse.setDepartment(toDepartmentResponse(employee.getDepartment()));
+        employeeResponse.setDesignation(toDesignationResponse(employee.getDesignation()));
+        employeeResponse.setSalary(employee.getSalary());
+        employeeResponse.setJoiningDate(employee.getJoiningDate());
+        employeeResponse.setStatus(employee.getStatus());
+        return employeeResponse;
+    }
+
+    private DepartmentResponse toDepartmentResponse(Department department) {
+        if (department == null) {
+            return null;
+        }
+        DepartmentResponse response = new DepartmentResponse();
+        response.setId(department.getId());
+        response.setName(department.getName());
+        return response;
+    }
+
+    private DesignationResponse toDesignationResponse(Designation designation) {
+        if (designation == null) {
+            return null;
+        }
+        DesignationResponse response = new DesignationResponse();
+        response.setId(designation.getId());
+        response.setTitle(designation.getTitle());
+        response.setLevel(designation.getLevel());
+        return response;
+    }
 }
