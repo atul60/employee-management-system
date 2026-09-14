@@ -1,7 +1,5 @@
 package employee_management_system.controller;
 
-import java.util.*;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import employee_management_system.dto.request.CreateEmployeeRequest;
+import employee_management_system.dto.request.PageQuery;
 import employee_management_system.dto.response.EmployeeResponse;
+import employee_management_system.dto.response.PageResponse;
 import employee_management_system.entity.Employee;
 import employee_management_system.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -27,8 +27,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/list")
-    public List<EmployeeResponse> getAllEmployees() {
-        return employeeService.getAllEmployees();
+    public PageResponse<EmployeeResponse> getAllEmployees(PageQuery pageQuery) {
+        return employeeService.getAllEmployees(pageQuery);
     }
 
     @PostMapping("/create")

@@ -1,14 +1,14 @@
 package employee_management_system.service;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import employee_management_system.dto.request.CreateEmployeeRequest;
+import employee_management_system.dto.request.PageQuery;
 import employee_management_system.dto.response.DepartmentResponse;
 import employee_management_system.dto.response.DesignationResponse;
 import employee_management_system.dto.response.EmployeeResponse;
+import employee_management_system.dto.response.PageResponse;
 import employee_management_system.entity.Department;
 import employee_management_system.entity.Designation;
 import employee_management_system.entity.Employee;
@@ -35,10 +35,9 @@ public class EmployeeService {
         this.designationRepository = designationRepository;
     }
 
-    public List<EmployeeResponse> getAllEmployees() {
-        return employeeRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
+    public PageResponse<EmployeeResponse> getAllEmployees(PageQuery pageQuery) {
+        Page<EmployeeResponse> page = employeeRepository.findAll(pageQuery.toPageable()).map(this::toResponse);
+        return PageResponse.from(page);
     }
 
     public EmployeeResponse createEmployee(CreateEmployeeRequest createEmployeeRequest) {
