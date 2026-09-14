@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PageResponse<T> {
-    private List<T> content;
+    private List<T> data;
     private int page;
     private int size;
     private long totalElements;
@@ -19,7 +19,7 @@ public class PageResponse<T> {
 
     public static <T> PageResponse<T> from(Page<T> page) {
         PageResponse<T> response = new PageResponse<>();
-        response.setContent(page.getContent());
+        response.setData(page.getContent());
         response.setPage(page.getNumber() + 1);
         response.setSize(page.getSize());
         response.setTotalElements(page.getTotalElements());

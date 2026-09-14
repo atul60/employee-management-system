@@ -12,14 +12,16 @@ import lombok.Setter;
 public class PageQuery {
     private int pageNumber = 1;
     private int pageSize = 10;
-    private String sortBy = "id";
-    private String sortDirection = "asc";
+    private String sortBy;
+    private String sortDirection;
 
     public Pageable toPageable() {
+        if(sortBy == null || sortBy.isBlank()) {
+            return PageRequest.of(pageNumber - 1, pageSize);
+        }
         Sort.Direction direction = "desc".equalsIgnoreCase(sortDirection)
                 ? Sort.Direction.DESC
                 : Sort.Direction.ASC;
-        String property = (sortBy == null || sortBy.isBlank()) ? "id" : sortBy;
-        return PageRequest.of(pageNumber - 1, pageSize, Sort.by(direction, property));
+        return PageRequest.of(pageNumber - 1, pageSize, Sort.by(direction, sortBy));
     }
 }
