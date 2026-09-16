@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import employee_management_system.dto.request.CreateEmployeeRequest;
-import employee_management_system.dto.request.PageQuery;
+import employee_management_system.dto.request.EmployeeListQuery;
 import employee_management_system.dto.response.EmployeeResponse;
 import employee_management_system.dto.response.PageResponse;
 import employee_management_system.entity.Employee;
@@ -27,7 +27,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/list")
-    public PageResponse<EmployeeResponse> getAllEmployees(PageQuery pageQuery) {
+    public PageResponse<EmployeeResponse> getAllEmployees(EmployeeListQuery pageQuery) {
         return employeeService.getAllEmployees(pageQuery);
     }
 

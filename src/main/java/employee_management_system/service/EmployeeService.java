@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import employee_management_system.dto.request.CreateEmployeeRequest;
-import employee_management_system.dto.request.PageQuery;
+import employee_management_system.dto.request.EmployeeListQuery;
 import employee_management_system.dto.response.DepartmentResponse;
 import employee_management_system.dto.response.DesignationResponse;
 import employee_management_system.dto.response.EmployeeResponse;
@@ -35,9 +35,12 @@ public class EmployeeService {
         this.designationRepository = designationRepository;
     }
 
-    public PageResponse<EmployeeResponse> getAllEmployees(PageQuery pageQuery) {
-        Page<EmployeeResponse> page = employeeRepository.findAll(pageQuery.toPageable()).map(this::toResponse);
-        return PageResponse.from(page);
+    public PageResponse<EmployeeResponse> getAllEmployees(EmployeeListQuery pageQuery) {
+        String search = pageQuery.getSearch();
+        Page<Employee> employees = (search == null || search.isBlank())
+                ? employeeRepository.findAll(pageQuery.toPageable())
+                : employeeRepository.search(search.trim(), pageQuery.toPageable());
+        return PageResponse.from(employees.map(this::toResponse));
     }
 
     public EmployeeResponse createEmployee(CreateEmployeeRequest createEmployeeRequest) {
