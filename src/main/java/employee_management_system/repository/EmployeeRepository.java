@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import employee_management_system.entity.Employee;
+import employee_management_system.entity.enums.EmployeeStatus;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
@@ -19,11 +20,22 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     @Query("""
             SELECT e FROM Employee e
-            WHERE LOWER(e.firstName) LIKE LOWER(CONCAT('%', :search, '%'))
-               OR LOWER(e.lastName) LIKE LOWER(CONCAT('%', :search, '%'))
-               OR LOWER(e.email) LIKE LOWER(CONCAT('%', :search, '%'))
-               OR LOWER(e.department.name) LIKE LOWER(CONCAT('%', :search, '%'))
-               OR LOWER(e.designation.title) LIKE LOWER(CONCAT('%', :search, '%'))
+            WHERE (:status IS NULL OR e.status = :status)
+              AND (:departmentId IS NULL OR e.department.id = :departmentId)
+              AND (:designationId IS NULL OR e.designation.id = :designationId)
+              AND (
+                    :search IS NULL
+                    OR LOWER(e.firstName) LIKE LOWER(CONCAT('%', :search, '%'))
+                    OR LOWER(e.lastName) LIKE LOWER(CONCAT('%', :search, '%'))
+                    OR LOWER(e.email) LIKE LOWER(CONCAT('%', :search, '%'))
+                    OR LOWER(e.department.name) LIKE LOWER(CONCAT('%', :search, '%'))
+                    OR LOWER(e.designation.title) LIKE LOWER(CONCAT('%', :search, '%'))
+                  )
             """)
-    Page<Employee> search(@Param("search") String search, Pageable pageable);
+    Page<Employee> findAllFiltered(
+            @Param("search") String search,
+            @Param("status") EmployeeStatus status,
+            @Param("departmentId") Long departmentId,
+            @Param("designationId") Long designationId,
+            Pageable pageable);
 }

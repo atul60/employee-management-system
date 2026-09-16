@@ -37,9 +37,15 @@ public class EmployeeService {
 
     public PageResponse<EmployeeResponse> getAllEmployees(EmployeeListQuery pageQuery) {
         String search = pageQuery.getSearch();
-        Page<Employee> employees = (search == null || search.isBlank())
-                ? employeeRepository.findAll(pageQuery.toPageable())
-                : employeeRepository.search(search.trim(), pageQuery.toPageable());
+        if (search != null) {
+            search = search.isBlank() ? null : search.trim();
+        }
+        Page<Employee> employees = employeeRepository.findAllFiltered(
+                search,
+                pageQuery.getStatus(),
+                pageQuery.getDepartmentId(),
+                pageQuery.getDesignationId(),
+                pageQuery.toPageable());
         return PageResponse.from(employees.map(this::toResponse));
     }
 
