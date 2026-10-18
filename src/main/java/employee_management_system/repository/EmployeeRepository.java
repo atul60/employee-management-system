@@ -20,6 +20,17 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     @Query("""
             SELECT e FROM Employee e
+            WHERE (:search IS NULL OR LOWER(e.firstName) LIKE LOWER(CONCAT('%', :search, '%')))
+              AND (:departmentId IS NULL OR e.department.id = :departmentId)
+            ORDER BY e.firstName ASC
+            """)
+    Page<Employee> findAllByDepartmentId(
+            @Param("search") String search,
+            @Param("departmentId") Long departmentId,
+            Pageable pageable);
+
+    @Query("""
+            SELECT e FROM Employee e
             WHERE (:status IS NULL OR e.status = :status)
               AND (:departmentId IS NULL OR e.department.id = :departmentId)
               AND (:designationId IS NULL OR e.designation.id = :designationId)

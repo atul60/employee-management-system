@@ -27,16 +27,18 @@ public class CreateEmployeeRequest {
     @Pattern(regexp = "^\\d{10}$", message = "Invalid phone number")
     @NotBlank(message = "Phone number is required")
     private String phoneNumber;
-
-    @NotNull(message = "Department is required")
-    private Long department;
-
-    @NotNull(message = "Designation is required")
-    private Long designation;
-
+    
     @NotNull(message = "Salary is required")
     @Positive(message = "Salary must be greater than 0")
     private BigDecimal salary;
-    
+
+    private Long departmentId;
+
+    private Long designationId;
+
+    private Long locationId;
+
+    private Long managerId;
+
     private LocalDate joiningDate;
 }

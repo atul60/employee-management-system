@@ -49,11 +49,17 @@ public class Employee {
     @NotBlank
     private String phoneNumber;
     @ManyToOne
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "department_id", nullable = true)
     private Department department;
     @ManyToOne
-    @JoinColumn(name = "designation_id")
+    @JoinColumn(name = "designation_id", nullable = true)
     private Designation designation;
+    @ManyToOne
+    @JoinColumn(name = "location_id", nullable = true)
+    private Location location;
+    @ManyToOne
+    @JoinColumn(name = "manager_id", nullable = true)
+    private Employee managerId;
     @NotNull
     @Positive
     private BigDecimal salary;
