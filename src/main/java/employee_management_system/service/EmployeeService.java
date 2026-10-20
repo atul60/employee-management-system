@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 
 import employee_management_system.dto.request.CreateEmployeeRequest;
 import employee_management_system.dto.request.EmployeeListQuery;
+import employee_management_system.dto.request.ReportsRequest;
 import employee_management_system.dto.response.EmployeeResponse;
 import employee_management_system.dto.response.PageResponse;
+import employee_management_system.dto.response.ReportsResponse;
 import employee_management_system.entity.Employee;
 import employee_management_system.entity.enums.StatusCode;
 import employee_management_system.exception.DuplicateResourceException;
@@ -80,8 +82,9 @@ public class EmployeeService {
             employee.setLocation(locationRepository.findById(createEmployeeRequest.getLocationId())
                     .orElseThrow(() -> new ResourceNotFoundException(StatusCode.EMPLOYEE_NOT_FOUND, "Location not found")));
         }
-        if(createEmployeeRequest.getManagerId() != null) {
-            employee.setManagerId(employeeRepository.findById(createEmployeeRequest.getManagerId())
+        // Request carries a Long id; entity association is Employee manager (column manager_id).
+        if (createEmployeeRequest.getManagerId() != null) {
+            employee.setManager(employeeRepository.findById(createEmployeeRequest.getManagerId())
                     .orElseThrow(() -> new ResourceNotFoundException(StatusCode.EMPLOYEE_NOT_FOUND, "Manager not found")));
         }
         Employee createdEmployee = employeeRepository.save(employee);
@@ -108,5 +111,22 @@ public class EmployeeService {
         existingEmployee.setJoiningDate(employee.getJoiningDate());
         existingEmployee.setStatus(employee.getStatus());
         return employeeRepository.save(existingEmployee);
+    }
+
+    /** Returns direct reports for a manager; 404 if that employee id does not exist. */
+    public PageResponse<ReportsResponse> employeeReports(ReportsRequest reportsRequest) {
+        Long managerId = reportsRequest.getManagerId();
+        if (!employeeRepository.existsById(managerId)) {
+            throw new ResourceNotFoundException(StatusCode.EMPLOYEE_NOT_FOUND, "Manager not found");
+        }
+        String search = reportsRequest.getSearch();
+        if (search != null) {
+            search = search.isBlank() ? null : search.trim();
+        }
+        Page<Employee> employees = employeeRepository.findAllFilteredByManagerId(
+                search,
+                managerId,
+                reportsRequest.toPageable());
+        return PageResponse.from(employees.map(employeeMapper::toReportsResponse));
     }
 }

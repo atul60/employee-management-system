@@ -49,4 +49,19 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             @Param("departmentId") Long departmentId,
             @Param("designationId") Long designationId,
             Pageable pageable);
+
+    @Query("""
+            SELECT e FROM Employee e
+            WHERE (:managerId IS NOT NULL AND e.manager.id = :managerId)
+              AND (
+                    :search IS NULL
+                    OR LOWER(e.firstName) LIKE LOWER(CONCAT('%', :search, '%'))
+                    OR LOWER(e.lastName) LIKE LOWER(CONCAT('%', :search, '%'))
+                    OR LOWER(e.email) LIKE LOWER(CONCAT('%', :search, '%'))
+                  )
+                    """)
+    Page<Employee> findAllFilteredByManagerId(
+            @Param("search") String search,
+            @Param("managerId") Long managerId,
+            Pageable pageable);
 }

@@ -59,7 +59,7 @@ public class Employee {
     private Location location;
     @ManyToOne
     @JoinColumn(name = "manager_id", nullable = true)
-    private Employee managerId;
+    private Employee manager;
     @NotNull
     @Positive
     private BigDecimal salary;

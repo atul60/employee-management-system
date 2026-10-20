@@ -21,5 +21,6 @@ public class EmployeeResponse {
     private BigDecimal salary;
     private LocalDate joiningDate;
     private EmployeeStatus status;
+    private String managerName;
 }
     
