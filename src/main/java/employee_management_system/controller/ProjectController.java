@@ -11,8 +11,8 @@ import employee_management_system.dto.response.PageResponse;
 import employee_management_system.dto.response.ProjectResponse;
 import employee_management_system.service.ProjectService;
 
-@RestController 
-@RequestMapping ("/api")
+@RestController
+@RequestMapping ("/api/projects")
 public class ProjectController {
     private final ProjectService projectService;
 
@@ -20,14 +20,15 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @GetMapping("/projects/list")
+    @GetMapping("/list")
     public PageResponse<ProjectResponse> getAllProjects(PageQuery pageQuery) {
         return projectService.getAllProjects(pageQuery);
 
     }
 
-    @GetMapping("/:{id}/employees")
-    public PageResponse<EmployeeResponse> getEmployeesByProjectId(@PathVariable Long id, PageQuery pageQuery) {
-        return projectService.getEmployeesByProjectId(id, pageQuery);
+    // Nested resource: employees assigned to the project named in the path.
+    @GetMapping("/{projectId}/employees")
+    public PageResponse<EmployeeResponse> getEmployeesByProjectId(@PathVariable Long projectId, PageQuery pageQuery) {
+        return projectService.getEmployeesByProjectId(projectId, pageQuery);
     }
 }
