@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import employee_management_system.dto.request.CreateEmployeeRequest;
 import employee_management_system.dto.request.EmployeeListQuery;
 import employee_management_system.dto.request.ReportsRequest;
+import employee_management_system.dto.request.Page.SearchedPageQuery;
 import employee_management_system.dto.response.EmployeeResponse;
 import employee_management_system.dto.response.PageResponse;
 import employee_management_system.dto.response.ReportsResponse;
+import employee_management_system.dto.response.ProjectResponse;
 import employee_management_system.entity.Employee;
 import employee_management_system.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -52,5 +54,10 @@ public class EmployeeController {
     public PageResponse<ReportsResponse> employeeReports(@PathVariable Long id, ReportsRequest reportsRequest) {
         reportsRequest.setManagerId(id);
         return employeeService.employeeReports(reportsRequest);
+    }
+
+    @GetMapping("/{id}/projects")
+    public PageResponse<ProjectResponse> employeeProjects(@PathVariable Long id, SearchedPageQuery pageQuery) {
+        return employeeService.employeeProjects(id, pageQuery);
     }
 }

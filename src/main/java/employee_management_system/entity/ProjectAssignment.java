@@ -1,5 +1,7 @@
 package employee_management_system.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,4 +30,8 @@ public class ProjectAssignment {
     private Project project;
 
     private String role;
+
+    private int allocationPercent;
+
+    private LocalDate startDate;
 }

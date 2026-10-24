@@ -1,4 +1,4 @@
-package employee_management_system.dto.request;
+package employee_management_system.dto.request.Page;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

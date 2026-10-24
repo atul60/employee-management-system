@@ -13,7 +13,6 @@ import lombok.Setter;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
-    private StatusCode statusCode;
     private int status;
     private String error;
     private String message;
@@ -30,7 +29,6 @@ public class ErrorResponse {
 
     public static ErrorResponse of(StatusCode statusCode, String message, Map<String, String> fieldErrors) {
         ErrorResponse response = new ErrorResponse();
-        response.setStatusCode(statusCode);
         response.setStatus(statusCode.getHttpStatus().value());
         response.setError(statusCode.getHttpStatus().getReasonPhrase());
         response.setMessage(message);

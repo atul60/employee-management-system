@@ -5,9 +5,7 @@ import org.springframework.http.HttpStatus;
 public enum StatusCode {
     DUPLICATE_EMAIL(409, "Employee with this email already exists"),
     DUPLICATE_PHONE(HttpStatus.CONFLICT, "Employee with this phone number already exists"),
-    EMPLOYEE_NOT_FOUND(HttpStatus.NOT_FOUND, "Employee not found"),
-    // Returned when a project id does not exist (e.g. GET /api/projects/{id}/employees).
-    PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "Project not found"),
+    RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "Resource not found"),
     VALIDATION_FAILED(HttpStatus.BAD_REQUEST, "Request validation failed"),
     MALFORMED_REQUEST(HttpStatus.BAD_REQUEST, "Malformed request body"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
