@@ -75,4 +75,19 @@ public class ProjectService {
         newProjectAssignment.setStartDate(LocalDate.now());
         projectAssignmentRepository.save(newProjectAssignment);
     }
+
+    /** Deletes the assignment row only; the employee and the project stay. */
+    public void removeEmployeeFromProject(Long projectId, Long employeeId) {
+        if (!projectRepository.existsById(projectId)) {
+            throw new ApiException(StatusCode.RESOURCE_NOT_FOUND, "Project not found with id: " + projectId);
+        }
+        if (!employeeRepository.existsById(employeeId)) {
+            throw new ApiException(StatusCode.RESOURCE_NOT_FOUND, "Employee not found with id: " + employeeId);
+        }
+        ProjectAssignment assignment = projectAssignmentRepository
+                .findByProjectIdAndEmployeeId(projectId, employeeId)
+                .orElseThrow(() -> new ApiException(
+                        StatusCode.RESOURCE_NOT_FOUND, "Employee is not assigned to this project"));
+        projectAssignmentRepository.delete(assignment);
+    }
 }

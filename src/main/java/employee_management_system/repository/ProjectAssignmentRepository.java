@@ -1,6 +1,7 @@
 package employee_management_system.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,9 @@ import employee_management_system.entity.ProjectAssignment;
 public interface ProjectAssignmentRepository extends JpaRepository<ProjectAssignment, Long> {
 
     public List<ProjectAssignment> findByEmployeeId(Long employeeId);
+
+    // One bridge row for this project+employee pair; empty when they are not linked.
+    Optional<ProjectAssignment> findByProjectIdAndEmployeeId(Long projectId, Long employeeId);
 
     // Paged query returns Page directly; an empty page means "no assignments", not "no result object".
     @Query ("SELECT pa FROM ProjectAssignment pa WHERE pa.project.id = :projectId")

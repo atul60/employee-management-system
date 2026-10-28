@@ -1,5 +1,7 @@
 package employee_management_system.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,5 +38,14 @@ public class ProjectController {
     @PostMapping("/{projectId}/employees/{employeeId}")
     public void addEmployeeToProject(@PathVariable Long projectId, @PathVariable Long employeeId) {
         projectService.addEmployeeToProject(projectId, employeeId);
+    }
+
+    /** 204: the assignment is gone. 404 comes from the service via the global handler. */
+    @DeleteMapping("/{projectId}/employees/{employeeId}")
+    public ResponseEntity<Void> removeEmployeeFromProject(
+            @PathVariable Long projectId,
+            @PathVariable Long employeeId) {
+        projectService.removeEmployeeFromProject(projectId, employeeId);
+        return ResponseEntity.noContent().build();
     }
 }
