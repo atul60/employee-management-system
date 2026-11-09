@@ -1,6 +1,7 @@
 package employee_management_system.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -89,5 +90,50 @@ public class ProjectService {
                 .orElseThrow(() -> new ApiException(
                         StatusCode.RESOURCE_NOT_FOUND, "Employee is not assigned to this project"));
         projectAssignmentRepository.delete(assignment);
+    }
+
+    /**
+     * Moves an employee from one project to another (delete old bridge, insert new).
+     * Target project is resolved AFTER the delete on purpose so a mid-method failure
+     * shows why a shared transaction is required for atomicity.
+     * @Transactional keeps both writes in one unit: any runtime failure rolls back the delete.
+     */
+    @Transactional
+    public void transferEmployeeToProject(Long fromProjectId, Long employeeId, Long toProjectId) {
+        if (!employeeRepository.existsById(employeeId)) {
+            throw new ApiException(StatusCode.RESOURCE_NOT_FOUND, "Employee not found with id: " + employeeId);
+        }
+        if (fromProjectId.equals(toProjectId)) {
+            throw new ApiException(StatusCode.VALIDATION_FAILED, "Source and target project must be different");
+        }
+        ProjectAssignment oldAssignment = projectAssignmentRepository
+                .findByProjectIdAndEmployeeId(fromProjectId, employeeId)
+                .orElseThrow(() -> new ApiException(
+                        StatusCode.RESOURCE_NOT_FOUND, "Employee is not assigned to this project"));
+        if (projectAssignmentRepository.findByProjectIdAndEmployeeId(toProjectId, employeeId).isPresent()) {
+            throw new ApiException(
+                    StatusCode.VALIDATION_FAILED, "Employee is already assigned to the target project");
+        }
+
+        // Capture fields before delete; the entity may not be usable after removal.
+        String role = oldAssignment.getRole();
+        int allocationPercent = oldAssignment.getAllocationPercent();
+        Employee employee = oldAssignment.getEmployee();
+
+        // First write: without a surrounding transaction this can commit on its own.
+        projectAssignmentRepository.delete(oldAssignment);
+
+        // Second step can fail (missing target) after the delete above has already run.
+        Project toProject = projectRepository.findById(toProjectId)
+                .orElseThrow(() -> new ApiException(
+                        StatusCode.RESOURCE_NOT_FOUND, "Project not found with id: " + toProjectId));
+
+        ProjectAssignment newAssignment = new ProjectAssignment();
+        newAssignment.setEmployee(employee);
+        newAssignment.setProject(toProject);
+        newAssignment.setRole(role);
+        newAssignment.setAllocationPercent(allocationPercent);
+        newAssignment.setStartDate(LocalDate.now());
+        projectAssignmentRepository.save(newAssignment);
     }
 }

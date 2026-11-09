@@ -48,4 +48,14 @@ public class ProjectController {
         projectService.removeEmployeeFromProject(projectId, employeeId);
         return ResponseEntity.noContent().build();
     }
+
+    /** 204 on success; mid-failure behavior depends on whether the service method is transactional. */
+    @PostMapping("/{fromProjectId}/employees/{employeeId}/transfer/{toProjectId}")
+    public ResponseEntity<Void> transferEmployee(
+            @PathVariable Long fromProjectId,
+            @PathVariable Long employeeId,
+            @PathVariable Long toProjectId) {
+        projectService.transferEmployeeToProject(fromProjectId, employeeId, toProjectId);
+        return ResponseEntity.noContent().build();
+    }
 }
