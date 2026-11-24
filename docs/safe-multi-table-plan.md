@@ -336,6 +336,7 @@ CREATE TABLE employees (
     salary         DECIMAL(12,2) NOT NULL,
     joining_date   DATE NOT NULL,
     status         VARCHAR(20)  NOT NULL,
+    role           VARCHAR(20)  NOT NULL DEFAULT 'EMPLOYEE',
     department_id  BIGINT NOT NULL,
     designation_id BIGINT NOT NULL,
     location_id    BIGINT NOT NULL,

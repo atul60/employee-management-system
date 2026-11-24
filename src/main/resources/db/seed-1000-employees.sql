@@ -12,6 +12,7 @@ INSERT INTO employees (
     salary,
     joining_date,
     status,
+    role,
     department_id,
     designation_id,
     location_id,
@@ -42,6 +43,11 @@ SELECT
         'ACTIVE', 'ACTIVE', 'ACTIVE', 'ACTIVE', 'ACTIVE', 'ACTIVE',
         'ACTIVE', 'ACTIVE', 'ON_LEAVE', 'ON_LEAVE', 'INACTIVE', 'TERMINATED'
     ) AS status,
+    CASE
+        WHEN MOD(n, 5) = 0 AND MOD(n, 40) = 0 THEN 'ADMIN'
+        WHEN MOD(n, 5) = 2 THEN 'HR'
+        ELSE 'EMPLOYEE'
+    END AS role,
     CASE MOD(n, 5)
         WHEN 0 THEN 1
         WHEN 1 THEN 2

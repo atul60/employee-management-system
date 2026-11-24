@@ -24,6 +24,7 @@ public class EmployeeMapper {
         employeeResponse.setSalary(employee.getSalary());
         employeeResponse.setJoiningDate(employee.getJoiningDate());
         employeeResponse.setStatus(employee.getStatus());
+        employeeResponse.setRole(employee.getRole());
         Employee manager = employee.getManager();
         if (manager != null) {
             employeeResponse.setManagerName(manager.getFirstName() + " " + manager.getLastName());

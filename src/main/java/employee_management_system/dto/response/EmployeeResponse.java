@@ -3,6 +3,7 @@ package employee_management_system.dto.response;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import employee_management_system.entity.enums.EmployeeRole;
 import employee_management_system.entity.enums.EmployeeStatus;
 
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class EmployeeResponse {
     private BigDecimal salary;
     private LocalDate joiningDate;
     private EmployeeStatus status;
+    private EmployeeRole role;
     private String managerName;
 }
     

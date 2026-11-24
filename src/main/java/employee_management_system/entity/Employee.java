@@ -3,6 +3,7 @@ package employee_management_system.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import employee_management_system.entity.enums.EmployeeRole;
 import employee_management_system.entity.enums.EmployeeStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -69,4 +70,9 @@ public class Employee {
 
     @Enumerated(EnumType.STRING)
     private EmployeeStatus status = EmployeeStatus.ACTIVE;
+
+    /** Who this person may act as when calling the API. Defaults to EMPLOYEE. */
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private EmployeeRole role = EmployeeRole.EMPLOYEE;
 }
